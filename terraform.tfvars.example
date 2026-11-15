@@ -1,0 +1,37 @@
+# Copy to terraform.tfvars and fill in your own values.
+# terraform.tfvars is gitignored - never commit it.
+# Authentication comes from the Azure CLI (`az login`); no credentials go here.
+
+resource_group_name = "<your-resource-group>"
+location            = "East US"
+
+vnet_name          = "aks-vnet"
+vnet_address_space = ["10.0.0.0/16"]
+
+subnets = {
+  "aks"        = { address_prefix = "10.0.1.0/24" }
+  "appgateway" = { address_prefix = "10.0.2.0/24" }
+  "vmss"       = { address_prefix = "10.0.3.0/24" }
+}
+
+nsg_name         = "aks-nsg"
+nat_gateway_name = "aks-nat-gateway" # module is currently disabled in main.tf
+app_gateway_name = "aks-app-gateway"
+lb_name          = "aks-load-balancer"
+
+vmss_name           = "aks-vmss"
+vm_size             = "Standard_B1s"
+instance_count      = 1
+admin_username      = "<your-admin-username>"
+ssh_public_key_path = "~/.ssh/id_rsa.pub"
+
+aks_name           = "aks-cluster"
+kubernetes_version = "<supported-aks-version>" # see: az aks get-versions --location <region> -o table
+node_count         = 1
+aks_vm_size        = "Standard_B2s"
+
+tags = {
+  environment = "development"
+  project     = "aks-multi-az"
+  owner       = "<your-name>"
+}
