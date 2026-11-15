@@ -1,5 +1,6 @@
 # Local .terraform directories
 **/.terraform/*
+.terraform/
 
 # .tfstate files
 *.tfstate
@@ -21,6 +22,11 @@ override.tf.json
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 *.tfplan
+tfplan
+
+# Variable files can hold real values - commit only *.example
+terraform.tfvars
+*.auto.tfvars
 
 # Ignore CLI configuration files
 .terraformrc
@@ -40,8 +46,7 @@ Thumbs.db
 *.backup
 *.bak
 
-# Ignore lock files (optional - some teams prefer to commit this)
-.terraform.lock.hcl
+# Keep .terraform.lock.hcl committed so provider versions are pinned
 
 # IDE files
 .vscode/
