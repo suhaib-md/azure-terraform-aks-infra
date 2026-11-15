@@ -27,7 +27,7 @@ module "vnet" {
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
   tags                = var.tags
-  
+
   depends_on = [azurerm_resource_group.rg]
 }
 
@@ -37,7 +37,7 @@ module "subnets" {
   subnets             = var.subnets
   resource_group_name = azurerm_resource_group.rg.name
   vnet_name           = module.vnet.vnet_name
-  
+
   depends_on = [module.vnet]
 }
 
@@ -48,19 +48,19 @@ module "nsg" {
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
   tags                = var.tags
-  
+
   depends_on = [azurerm_resource_group.rg]
 }
 
 # Create NAT Gateway
 #module "nat_gateway" {
- # source              = "./modules/nat_gateway"
-  #nat_gateway_name    = var.nat_gateway_name
-  #location            = var.location
-  #resource_group_name = azurerm_resource_group.rg.name
-  #tags                = var.tags
-  
-  #depends_on = [azurerm_resource_group.rg]
+# source              = "./modules/nat_gateway"
+#nat_gateway_name    = var.nat_gateway_name
+#location            = var.location
+#resource_group_name = azurerm_resource_group.rg.name
+#tags                = var.tags
+
+#depends_on = [azurerm_resource_group.rg]
 #}
 
 # Create Load Balancer
@@ -70,7 +70,7 @@ module "load_balancer" {
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
   tags                = var.tags
-  
+
   depends_on = [azurerm_resource_group.rg]
 }
 
@@ -84,44 +84,44 @@ resource "time_sleep" "wait_for_core_networking" {
     module.nsg,
     module.load_balancer
   ]
-  create_duration = "30s"  # Reduced wait time
+  create_duration = "30s" # Reduced wait time
 }
 
 # NSG Associations
 resource "azurerm_subnet_network_security_group_association" "aks_nsg" {
   subnet_id                 = module.subnets.subnet_ids["aks"]
   network_security_group_id = module.nsg.nsg_id
-  
+
   depends_on = [time_sleep.wait_for_core_networking]
 }
 
 resource "azurerm_subnet_network_security_group_association" "vmss_nsg" {
   subnet_id                 = module.subnets.subnet_ids["vmss"]
   network_security_group_id = module.nsg.nsg_id
-  
+
   depends_on = [time_sleep.wait_for_core_networking]
 }
 
 resource "azurerm_subnet_network_security_group_association" "appgw_nsg" {
   subnet_id                 = module.subnets.subnet_ids["appgateway"]
   network_security_group_id = module.nsg.nsg_id
-  
+
   depends_on = [time_sleep.wait_for_core_networking]
 }
 
 # NAT Gateway Associations
 #resource "azurerm_subnet_nat_gateway_association" "aks_nat" {
-  #subnet_id      = module.subnets.subnet_ids["aks"]
-  #nat_gateway_id = module.nat_gateway.nat_gateway_id
-  
-  #depends_on = [time_sleep.wait_for_core_networking]
+#subnet_id      = module.subnets.subnet_ids["aks"]
+#nat_gateway_id = module.nat_gateway.nat_gateway_id
+
+#depends_on = [time_sleep.wait_for_core_networking]
 #}
 
 #resource "azurerm_subnet_nat_gateway_association" "vmss_nat" {
-  #subnet_id      = module.subnets.subnet_ids["vmss"]
-  #nat_gateway_id = module.nat_gateway.nat_gateway_id
-  
-  #depends_on = [time_sleep.wait_for_core_networking]
+#subnet_id      = module.subnets.subnet_ids["vmss"]
+#nat_gateway_id = module.nat_gateway.nat_gateway_id
+
+#depends_on = [time_sleep.wait_for_core_networking]
 #}
 
 # Wait for associations
@@ -144,7 +144,7 @@ module "app_gateway" {
   resource_group_name = azurerm_resource_group.rg.name
   subnet_id           = module.subnets.subnet_ids["appgateway"]
   tags                = var.tags
-  
+
   depends_on = [time_sleep.wait_for_associations]
 }
 
@@ -161,7 +161,7 @@ module "vmss" {
   subnet_id           = module.subnets.subnet_ids["vmss"]
   backend_pool_id     = module.load_balancer.backend_pool_id
   tags                = var.tags
-  
+
   depends_on = [time_sleep.wait_for_associations]
 }
 
@@ -176,6 +176,6 @@ module "aks" {
   vm_size             = var.aks_vm_size
   subnet_id           = module.subnets.subnet_ids["aks"]
   tags                = var.tags
-  
+
   depends_on = [time_sleep.wait_for_associations]
 }

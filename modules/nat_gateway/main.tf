@@ -5,7 +5,7 @@ resource "azurerm_public_ip" "nat_ip" {
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
   sku                 = "Standard"
-  zones               = ["3"]  # Specify zone for consistency
+  zones               = ["3"] # Specify zone for consistency
   tags                = var.tags
 }
 
@@ -15,7 +15,7 @@ resource "azurerm_nat_gateway" "nat_gateway" {
   resource_group_name     = var.resource_group_name
   sku_name                = "Standard"
   idle_timeout_in_minutes = 10
-  zones                   = ["3"]  # Specify zone for consistency
+  zones                   = ["3"] # Specify zone for consistency
   tags                    = var.tags
 
   depends_on = [

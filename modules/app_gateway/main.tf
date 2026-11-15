@@ -49,8 +49,8 @@ resource "azurerm_application_gateway" "app_gateway" {
   http_listener {
     name                           = "http-listener"
     frontend_ip_configuration_name = "frontend-ip-config"
-    frontend_port_name            = "frontend-port"
-    protocol                      = "Http"
+    frontend_port_name             = "frontend-port"
+    protocol                       = "Http"
   }
 
   request_routing_rule {

@@ -4,7 +4,7 @@ resource "azurerm_route_table" "route_table" {
   location            = var.location
   resource_group_name = var.resource_group_name
   tags                = var.tags
-  
+
   # Use the new property name instead of deprecated one
   bgp_route_propagation_enabled = true
 }
@@ -24,7 +24,7 @@ resource "azurerm_subnet_route_table_association" "aks" {
   count          = var.associate_with_subnets ? 1 : 0
   subnet_id      = var.aks_subnet_id
   route_table_id = azurerm_route_table.route_table.id
-  
+
   depends_on = [
     azurerm_route_table.route_table,
     azurerm_route.routes

@@ -1,6 +1,6 @@
 variable "subnets" {
   description = "Map of subnet names to address prefixes"
-  type        = map(object({
+  type = map(object({
     address_prefix = string
   }))
 }

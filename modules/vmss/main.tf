@@ -7,10 +7,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   instances           = var.instance_count
   admin_username      = var.admin_username
   tags                = var.tags
-  
+
   # Disable password authentication
   disable_password_authentication = true
-  
+
   # Remove zones to avoid allocation issues - let Azure choose best placement
   # zones = ["3"]
 
@@ -42,7 +42,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     username   = var.admin_username
     public_key = file(var.ssh_public_key_path)
   }
-  
+
   # Custom script extension for basic setup
   extension {
     name                 = "HealthExtension"

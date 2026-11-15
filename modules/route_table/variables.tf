@@ -15,7 +15,7 @@ variable "resource_group_name" {
 
 variable "routes" {
   description = "Map of routes"
-  type        = map(object({
+  type = map(object({
     address_prefix         = string
     next_hop_type          = string
     next_hop_in_ip_address = optional(string)
